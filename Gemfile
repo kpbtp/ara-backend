@@ -66,3 +66,7 @@ end
 
 
 gem "rspec-rails", "~> 6.0"
+
+gem "devise", "~> 4.9"
+
+gem 'rack-cors', :require => 'rack/cors'
