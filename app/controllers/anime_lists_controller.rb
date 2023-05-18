@@ -19,7 +19,9 @@ class AnimeListsController < ApplicationController
   end
 
   def update
-    if anime_list.valid?(anime_list_params)
+    anime_list = AnimeList.find(params[:id])
+    anime_list.update(anime_list_params)
+    if anime_list.valid?
       render json: anime_list
     else
       render json: anime_list.errors, status: 422
@@ -27,6 +29,7 @@ class AnimeListsController < ApplicationController
   end
 
   def destroy
+    anime_list = AnimeList.find(params[:id])
     anime_list.destroy
     head :no_content
   end
