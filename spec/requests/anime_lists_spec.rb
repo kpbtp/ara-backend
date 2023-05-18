@@ -78,32 +78,58 @@ RSpec.describe "AnimeLists", type: :request do
     end
   end
 
-  # This is where i left off, it dont work
-  # describe "PUT /update" do
-  #   it "updates an anime list" do
-  #     anime_list = create(:anime_list, user: user, anime: anime, name: 'My Favorite Anime')
+  describe "PUT /update" do
+    it "updates an anime list" do
+      anime_list = user.anime_lists.create(
+        anime_id: anime.id,
+        name: "My Favorite Anime",
+        genre_preferences: "Action, Adventure"
+      )
   
-  #     updated_params = {
-  #       anime_list: {
-  #         name: 'Updated Anime List',
-  #         genre_preferences: 'Action, Adventure, Fantasy'
-  #       }
-  #     }
+      updated_params = {
+        anime_list: {
+          user_id: user.id,
+          anime_id: anime.id,
+          name: 'Updated Anime List',
+          genre_preferences: 'Action, Adventure, Fantasy'
+        }
+      }
   
-  #     put "/anime_lists/#{anime_list.id}", params: updated_params
-  #     puts "Response Body: #{response.body}"
-  #     puts "User ID: #{user.id}"
-  #     puts "Anime ID: #{anime.id}"
-  #     puts "AnimeList: #{anime_list}"
-  #     expect(response).to have_http_status(200)
+      patch "/anime_lists/#{anime_list.id}", params: updated_params
+
+      puts "Response Body: #{response.body}"
+      puts "AnimeList: #{anime_list}"
+      puts "Anime Preference: #{anime_list.genre_preferences}"
+
+      expect(response).to have_http_status(200)
+
+      anime_list = user.anime_lists.first
+
+      expect(anime_list.name).to eq('Updated Anime List')
+      expect(anime_list.genre_preferences).to eq('Action, Adventure, Fantasy')
+    end
+  end
   
-  #     # Reload the anime list from the database
-  #     anime_list.reload
+  describe "DELETE /destroy" do
+    it "deletes an anime list" do
+      
+      anime_list = user.anime_lists.create(
+        anime_id: anime.id,
+        name: "My Anime List",
+        genre_preferences: "Action, Adventure"
+      )
   
-  #     expect(anime_list.name).to eq('Updated Anime List')
-  #     expect(anime_list.genre_preferences).to eq('Action, Adventure, Fantasy')
-  #   end
-  # end
+      delete "/anime_lists/#{anime_list.id}"
   
+      # response for good delete
+      expect(response).to have_http_status(204)
   
+      deleted_anime_list = AnimeList.find_by(id: anime_list.id)
+  
+      # should be deleted
+      expect(deleted_anime_list).to be_nil
+      expect(user.anime_lists.length).to eq(0)
+    end
+  end
+
 end
