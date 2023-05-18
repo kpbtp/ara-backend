@@ -95,7 +95,7 @@ RSpec.describe "AnimeLists", type: :request do
         }
       }
   
-      put"/anime_lists/#{anime_list.id}", params: updated_params
+      patch "/anime_lists/#{anime_list.id}", params: updated_params
 
       puts "Response Body: #{response.body}"
       puts "AnimeList: #{anime_list}"
@@ -103,8 +103,7 @@ RSpec.describe "AnimeLists", type: :request do
 
       expect(response).to have_http_status(200)
 
-      # do not forget to reload
-      anime_list.reload
+      anime_list = user.anime_lists.first
 
       expect(anime_list.name).to eq('Updated Anime List')
       expect(anime_list.genre_preferences).to eq('Action, Adventure, Fantasy')
