@@ -5,7 +5,7 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "https://ara.onrender.com"
+    origins "http://ara.onrender.com"
     resource '*',
     headers: ["Authorization"],
     expose: ["Authorization"],
